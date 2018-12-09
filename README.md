@@ -6,7 +6,7 @@ Available Commands
 ==================
 - `ping`, returns a `PONG`.
 - `gen`, generates a new unique id.
-- `append <parnet>`, appends a new node to the spefified parent and returns the newly added id. 
+- `append <parent>`, appends a new node to the spefified parent and returns the newly added id. 
 - `flatten <id>`, returns all nested children for the specified id.
 - `tree <id>`, return json string represents a nested tree for the specified id.
 - `mv <id> <dst>`, moves the specified id to another parent `dst`.
