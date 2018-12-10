@@ -11,6 +11,7 @@ Available Commands
 - `tree <id>`, return json string represents a nested tree for the specified id.
 - `mv <id> <dst>`, moves the specified id to another parent `dst`.
 - `rm <id>`, removes the specified id from the tree.
+- `parents <id>`, returns a flate list of all parents.
 
 SDKs
 ====

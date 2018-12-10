@@ -112,6 +112,30 @@ func handleProcessCommand(conn redcon.Conn, cmd redcon.Command) {
 		d, _ := json.Marshal(nest(parent))
 		conn.WriteString(string(d))
 
+	// returns a flatten array of the parents
+	// of the specified node
+	case "parents":
+		if len(args) < 1 {
+			conn.WriteError("you must specify a node id")
+			break
+		}
+
+		var nest func(id string) []string
+
+		nest = func(id string) []string {
+			parent := redisConn.Get("utree:tree:" + id + ":parent").Val()
+			if parent == "" {
+				return nil
+			}
+			return append([]string{parent}, nest(parent)...)
+		}
+
+		all := nest(args[0])
+		conn.WriteArray(len(all))
+		for _, v := range all {
+			conn.WriteBulkString(v)
+		}
+
 	// move a node to another parent
 	// 1)- fetch the old parent
 	// 2)- remove the node from the old parent children
@@ -143,6 +167,7 @@ func handleProcessCommand(conn redcon.Conn, cmd redcon.Command) {
 		oldParentID := redisConn.Get("utree:tree:" + n + ":parent").Val()
 		redisConn.SRem("utree:tree:"+oldParentID+":children", n).Val()
 		redisConn.Del("utree:tree:" + n + ":parent").Val()
+
 	}
 }
 
